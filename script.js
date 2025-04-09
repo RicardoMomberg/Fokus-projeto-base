@@ -6,6 +6,12 @@ const displayTempo = document.querySelector('#timer')
 const startStopBtn = document.querySelector('.app__card-primary-button')
 const banner = document.querySelector('.app__image')
 const titulo = document.querySelector('.app__title')
+const botoes = document.querySelectorAll('.app__card-button')
+const musicaFocoInput = document.querySelector('#alternar-musica')
+//Guardar os arquivos em variaveis é muito mais rápido para carregamento do projeto, como em musica. 
+//Poderia ser utilizado no lugar de new Audio() o readFile(), porém atrasar o carregamento do projeto.
+const musica = new Audio('./sons/luna-rise-part-one.mp3') 
+musica.loop = true
 
 const duracaoFoco = 1500; 
 const duracaoCurto = 300; 
@@ -28,19 +34,33 @@ const duracaoLongo = 900;
 //     banner.setAttribute('src', './imagens/descanso-longo.png')
 // })
 
+musicaFocoInput.addEventListener('change', () => {
+    if(musica.paused) {
+        musica.play()
+    } else {
+        musica.pause()
+    }
+})
+
 focoBtn.addEventListener('click', () => {
     alterarContexto('foco')
+    focoBtn.classList.add('active')
 })
     
 curtoBtn.addEventListener('click', () => {
     alterarContexto('descanso-curto')
+    curtoBtn.classList.add('active')
 })
     
 longoBtn.addEventListener('click', () => {
     alterarContexto('descanso-longo')
+    longoBtn.classList.add('active')
 })
 
 function alterarContexto(contexto) {
+    botoes.forEach(function (contexto) {
+        contexto.classList.remove('active')
+    })
     html.setAttribute('data-contexto', contexto)
     banner.setAttribute('src', `./imagens/${contexto}.png`)
     switch (contexto) {
