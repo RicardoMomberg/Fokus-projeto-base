@@ -3,15 +3,22 @@ const focoBtn = document.querySelector('.app__card-button--foco')
 const curtoBtn = document.querySelector('.app__card-button--curto')
 const longoBtn = document.querySelector('.app__card-button--longo')
 const displayTempo = document.querySelector('#timer')
-const startStopBtn = document.querySelector('.app__card-primary-button')
 const banner = document.querySelector('.app__image')
 const titulo = document.querySelector('.app__title')
 const botoes = document.querySelectorAll('.app__card-button')
+const startStopBtn = document.querySelector('#start-pause')
 const musicaFocoInput = document.querySelector('#alternar-musica')
 //Guardar os arquivos em variaveis é muito mais rápido para carregamento do projeto, como em musica. 
 //Poderia ser utilizado no lugar de new Audio() o readFile(), porém atrasar o carregamento do projeto.
 const musica = new Audio('./sons/luna-rise-part-one.mp3') 
+const audioPlay = new Audio ('./sons/play.wav')
+const audioPausa = new Audio ('./sons/pause.mp3')
+const audioTempoFinalizado = new Audio ('./sons/beep.mp3')
+
 musica.loop = true
+
+let tempoDecorridoEmSegundos = 5
+let intervaloId = null
 
 const duracaoFoco = 1500; 
 const duracaoCurto = 300; 
@@ -87,4 +94,32 @@ function alterarContexto(contexto) {
     }
 }
 
+const contagemRegressiva = () => {
+    if(tempoDecorridoEmSegundos <= 0) {
+        audioTempoFinalizado.play()
+        zerar()
+        alert('Tempo finalizado!')
+        return
+    }
+    tempoDecorridoEmSegundos -= 1
+    console.log('Temporizador: ' + tempoDecorridoEmSegundos)
+    console.log('Id: ' + intervaloId)
+}
+
+startStopBtn.addEventListener('click', iniciarOuPausar)
+
+function iniciarOuPausar() {
+    if(intervaloId) {
+        audioPausa.play();
+        zerar()
+        return
+    }
+    audioPlay.play();
+    intervaloId = setInterval(contagemRegressiva, 1000)
+}
+
+function zerar() {
+    clearInterval(intervaloId)
+    intervaloId = null
+}
 
